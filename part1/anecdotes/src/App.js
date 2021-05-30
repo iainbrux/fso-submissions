@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-const Title = ({text}) => {
+const Title = ({ text }) => {
   return <h1>{text}</h1>;
 };
 
-const Anecdote = ({anecdote, votes}) => {
+const Anecdote = ({ anecdote, votes }) => {
   return (
     <>
       <p>
@@ -30,8 +30,10 @@ const App = () => {
 
   const [votes, setVotes] = useState(points);
   const [selected, setSelected] = useState(0);
-  const [bestAnecdote, setBestAnecdote] = useState('No anecdote has received the most votes yet. Vote for your favourite so it can take the crown!')
-  const [highestVoted, setHighestVoted] = useState(0)
+  const [bestAnecdote, setBestAnecdote] = useState(
+    "No anecdote has received the most votes yet. Vote for your favourite so it can take the crown!"
+  );
+  const [highestVoted, setHighestVoted] = useState(0);
 
   const randomAnecdote = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length));
@@ -42,8 +44,9 @@ const App = () => {
   mutates ONE SCORE ONE TIME ONLY (at the index of the current anecdote), 
   and then sets the sate of 'votes' to the 'scores' array.
   This is all accomplished without mutating any of the original data.
-  Each time we invoke this function, 'scores' receives its value from the updated 'votes' state,
-  allowing us to have the feeling of mutating the array, without mutating it, in a nice continuous lifecycle.
+  It then finds the highest number in the 'scores' array, and sets the 'highestVoted' state to the largest number found.
+  Finally, it then finds the index of the highest score within the 'scores' array, then uses that index to find the anecdote in the 'anecdotes' array...
+  ... allowing it to then be set in the 'bestAnecdote' state!
   */
 
   const voteForAnecdote = () => {
@@ -52,11 +55,10 @@ const App = () => {
     setVotes(scores);
 
     const isHighestVoted = Math.max(...scores);
-    setHighestVoted(isHighestVoted)
+    setHighestVoted(isHighestVoted);
 
     const isBestAnecdote = scores.indexOf(isHighestVoted);
     setBestAnecdote(anecdotes[isBestAnecdote]);
-
   };
 
   return (
@@ -66,7 +68,7 @@ const App = () => {
       <button onClick={() => voteForAnecdote()}>Vote</button>
       <button onClick={() => randomAnecdote()}>Next Anecdote</button>
       <Title text="Anecdote with most votes" />
-      <Anecdote anecdote={bestAnecdote} votes={highestVoted}/>
+      <Anecdote anecdote={bestAnecdote} votes={highestVoted} />
     </div>
   );
 };
