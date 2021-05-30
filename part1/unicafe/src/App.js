@@ -6,9 +6,10 @@ const Heading = (props) => {
 
 const Statistic = (props) => {
   return (
-    <p>
-      {props.text} {props.value}
-    </p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   );
 };
 
@@ -19,22 +20,25 @@ const Button = (props) => {
 const Statistics = ({ good, bad, neutral, average }) => {
   if (good > 0 || bad > 0 || neutral > 0 || average > 0) {
     return (
-      <>
-        <Statistic text="good" value={good} />
-        <Statistic text="neutral" value={neutral} />
-        <Statistic text="bad" value={bad} />
-        <Statistic text="all" value={good + neutral + bad} />
-        <Statistic text="average" value={average / (good + neutral + bad) || 0} />
-        <Statistic
-          text="positive"
-          value={((good / (good + neutral + bad)) * 100 || 0) + "%"}
-        />
-      </>
+      <table>
+        <tbody>
+          <Statistic text="good" value={good} />
+          <Statistic text="neutral" value={neutral} />
+          <Statistic text="bad" value={bad} />
+          <Statistic text="all" value={good + neutral + bad} />
+          <Statistic
+            text="average"
+            value={average / (good + neutral + bad) || 0}
+          />
+          <Statistic
+            text="positive"
+            value={((good / (good + neutral + bad)) * 100 || 0) + "%"}
+          />
+        </tbody>
+      </table>
     );
   }
-  return (
-    <p>No feedback given</p>
-  )
+  return <p>No feedback given</p>;
 };
 
 const App = () => {
