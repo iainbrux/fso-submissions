@@ -12,14 +12,35 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  const points = new Array(6).fill(0)
+
+  const [votes, setVotes] = useState(points)
+
   const randomAnecdote = () => {
-    return setSelected(Math.floor(Math.random() * anecdotes.length))
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+  }
+
+  /*
+  This following function creates a new 'scores' array from the 'votes' array in state,
+  mutates ONE SCORE ONE TIME ONLY (at the index of the current anecdote), 
+  and then sets the sate of 'votes' to the 'scores' array.
+  This is all accomplished without mutating any of the original data.
+  Each time we invoke this function, 'scores' receives its value from the updated 'votes' state,
+  allowing us to have the feeling of mutating the array, without mutating it, in a nice continuous lifecycle.
+  */
+
+  const voteForAnecdote = () => {
+    const scores = [...votes]
+    scores[selected] += 1;
+    setVotes(scores)
   }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={() => randomAnecdote()}>Click me</button>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={() => randomAnecdote()}>New anecdote</button>
+      <button onClick={() => voteForAnecdote()}>Vote</button>
     </div>
   )
 }
