@@ -4,7 +4,7 @@ const Heading = (props) => {
   return <h1>{props.text}</h1>;
 };
 
-const Display = (props) => {
+const Statistic = (props) => {
   return (
     <p>
       {props.text} {props.value}
@@ -20,12 +20,12 @@ const Statistics = ({ good, bad, neutral, average }) => {
   if (good > 0 || bad > 0 || neutral > 0 || average > 0) {
     return (
       <>
-        <Display text="good" value={good} />
-        <Display text="neutral" value={neutral} />
-        <Display text="bad" value={bad} />
-        <Display text="all" value={good + neutral + bad} />
-        <Display text="average" value={average / (good + neutral + bad) || 0} />
-        <Display
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={good + neutral + bad} />
+        <Statistic text="average" value={average / (good + neutral + bad) || 0} />
+        <Statistic
           text="positive"
           value={((good / (good + neutral + bad)) * 100 || 0) + "%"}
         />
