@@ -29,14 +29,14 @@ const App = () => {
       <Heading text="give feedback" />
       <Button handleClick={() => (setGood(good + 1), setAverage(average + 1)) } text="good" />
       <Button handleClick={() => (setNeutral(neutral + 1), setAverage(average + 0)) } text="neutral" />
-      <Button handleClick={() => (setBad(bad + 1), setAverage(average + -1)) } text="bad" />
+      <Button handleClick={() => (setBad(bad + 1), setAverage(average - 1)) } text="bad" />
       <Heading text="statistics" />
       <Display text="good" value={good}/>
       <Display text="neutral" value={neutral} />
       <Display text="bad" value={bad} />
       <Display text="all" value={good + neutral + bad} />
-      <Display text="average" value={average} />
-      <Display text="all" value={good + neutral + bad} />
+      <Display text="average" value={average / (good + neutral + bad) || 0} />
+      <Display text="positive" value={((good / (good + neutral + bad)) * 100 || 0) + '%'}/>
     </div>
   )
 }
