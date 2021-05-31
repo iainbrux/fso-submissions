@@ -5,7 +5,7 @@ const Total = ({ course }) => {
     const sum = exercises.reduce((total, exerciseValue) => total += exerciseValue)
     
     return(
-      <p>Number of exercises {sum}</p>
+      <p><strong>Number of exercises {sum}</strong></p>
     ) 
   }
 
