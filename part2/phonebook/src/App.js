@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import Heading from "./components/Heading";
+import Form from "./components/Form";
+import Input from "./components/Input";
+import ContactDetails from "./components/ContactDetails";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -10,7 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterBy, setFilterBy] = useState("");
-  const [filtered, setFiltered] = useState('')
+  const [filtered, setFiltered] = useState("");
 
   const addToPhonebook = (object) => {
     if (persons.find((person) => person.name === object.name)) {
@@ -52,45 +56,26 @@ const App = () => {
           person.name.toLowerCase().indexOf(filterBy.toLowerCase()) >= 0
       )
       .map((person) => {
-        return (
-          <li key={person.name}>
-            {person.name} {person.number}
-          </li>
-        );
+        return <ContactDetails name={person.name} number={person.number} />;
       });
 
-      setFiltered(filteredNames)
+    setFiltered(filteredNames);
   };
 
   return (
     <div>
-      <h2>Find a contact</h2>
-      <form>
-        <div>
-          name:
-          <input onChange={handleFilter} value={filterBy} />
-        </div>
-      </form>
-      <h2>Add a new contact</h2>
-      <form>
-        <div>
-          name:
-          <input onChange={handleName} value={newName} />
-        </div>
-        <div>
-          number:
-          <input onChange={handleNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit" onClick={handleSubmit}>
-            add
-          </button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {filtered}
-      </div>
+      <Heading text="Find a contact" />
+      <Input text="name: " handleData={handleFilter} newData={filterBy} />
+      <Heading text="Add a new contact" />
+      <Form
+        handleName={handleName}
+        handleNumber={handleNumber}
+        handleSubmit={handleSubmit}
+        newName={newName}
+        newNumber={newNumber}
+      />
+      <Heading text="numbers" />
+      <div>{filtered}</div>
     </div>
   );
 };
