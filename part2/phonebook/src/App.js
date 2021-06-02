@@ -1,20 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "./components/Heading";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import ContactDetails from "./components/ContactDetails";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [filtered, setFiltered] = useState("");
+  const [persons, setPersons] = useState("");
+
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch('http://localhost:3001/persons')
+      const data = await response.json();
+      setPersons(data)
+    }
+
+    getData()
+  }, [])
 
   const addToPhonebook = (object) => {
     if (persons.find((person) => person.name === object.name)) {
@@ -56,7 +62,7 @@ const App = () => {
           person.name.toLowerCase().indexOf(filterBy.toLowerCase()) >= 0
       )
       .map((person) => {
-        return <ContactDetails name={person.name} number={person.number} />;
+        return <ContactDetails name={person.name} number={person.number} key={person.id} />;
       });
 
     setFiltered(filteredNames);
