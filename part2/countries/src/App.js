@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Country from "./components/Country";
+import Input from './components/Input';
+import Filter from './components/Filter'
 
 const App = () => {
   const [countries, setCountries] = useState("");
   const [query, setQuery] = useState("");
-  const [filtered, setFiltered] = useState("");
-  const [moreThanTen, setMoreThanTen] = useState("Please begin your search.");
+  const [filtered, setFiltered] = useState([]);
+  const [limit, setLimit] = useState("Please begin your search.");
 
   useEffect(() => {
     const getData = async () => {
@@ -17,7 +18,7 @@ const App = () => {
     getData();
   }, []);
 
-  const searchCountries = (e) => {
+  const filterCountries = (e) => {
     setQuery(e.target.value);
 
     const filteredCountries = countries
@@ -25,33 +26,29 @@ const App = () => {
         (country) =>
           country.name.toLowerCase().indexOf(query.toLowerCase()) >= 0
       )
-      .map((country) => {
-        return <Country name={country.name} key={country.name} />;
-      });
 
     setFiltered(filteredCountries);
 
     if (e.target.value === "") {
-      return setMoreThanTen("Please begin your search.");
+      return setLimit("Please begin your search.");
     }
 
     if (!filteredCountries.length) {
-      return setMoreThanTen("No countries found.");
+      return setLimit("No countries found")
+    } else if (filteredCountries.length > 10) {
+      return setLimit("Please specify further")
+    } else if (filteredCountries.length === 1) {
+      console.log("One left")
+    } else {
+      return setLimit(false)
     }
 
-    if (filteredCountries.length > 10) {
-      return setMoreThanTen("Please specify further.");
-    } else if (filteredCountries.length === 1) {
-      console.log("One left! :D");
-    } else {
-      return setMoreThanTen(false);
-    }
   };
 
   return (
     <div>
-      find countries: <input onChange={searchCountries} value={query} />
-      <div>{moreThanTen ? moreThanTen : filtered}</div>
+      <Input filterCountries={filterCountries} query={query} />
+      <Filter limit={limit} filtered={filtered} />
     </div>
   );
 };
