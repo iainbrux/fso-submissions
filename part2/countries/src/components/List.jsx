@@ -1,7 +1,16 @@
 import React from "react";
 
-const List = ({ name }) => {
-  return <li>{name}</li>;
+const List = ({ name, key }) => {
+  const handleClick = () => {
+    console.log(key);
+  };
+
+  return (
+    <ul>
+      <li>{name}</li>
+      <button onClick={handleClick}>show</button>
+    </ul>
+  );
 };
 
-export default List
+export default List;

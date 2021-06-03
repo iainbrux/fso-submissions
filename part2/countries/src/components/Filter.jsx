@@ -3,6 +3,7 @@ import List from "./List";
 import Details from "./Details";
 
 const Filter = ({ filtered, limit }) => {
+
   if (limit) {
     return <div>{limit}</div>;
   }
@@ -14,7 +15,10 @@ const Filter = ({ filtered, limit }) => {
   return (
     <div>
       {filtered.map((country) => (
-        <List name={country.name} key={country.name} />
+        <List
+          name={country.name}
+          key={country.name}
+        />
       ))}
     </div>
   );
