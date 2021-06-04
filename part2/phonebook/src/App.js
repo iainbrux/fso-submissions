@@ -3,6 +3,7 @@ import Heading from "./components/Heading";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import ContactDetails from "./components/ContactDetails";
+import axios from "axios";
 
 const App = () => {
   const [newName, setNewName] = useState("");
@@ -11,26 +12,36 @@ const App = () => {
   const [filtered, setFiltered] = useState("");
   const [persons, setPersons] = useState("");
 
-
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch('http://localhost:3001/persons')
+      const response = await fetch("http://localhost:3001/persons");
       const data = await response.json();
-      setPersons(data)
-    }
+      setPersons(data);
+    };
 
-    getData()
-  }, [])
+    getData();
+  }, []);
 
   const addToPhonebook = (object) => {
+    const url = "http://localhost:3001/persons";
+
     if (persons.find((person) => person.name === object.name)) {
       alert(`${object.name} is already in the phonebook`);
       setNewNumber("");
       return setNewName("");
     } else {
-      setPersons(persons.concat(object));
-      setNewNumber("");
-      return setNewName("");
+      const postData = async () => {
+        try {
+          const response = await axios.post(url, object);
+          setPersons(persons.concat(response.data));
+          setNewNumber("");
+          setNewName("");
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      return postData();
     }
   };
 
@@ -62,7 +73,13 @@ const App = () => {
           person.name.toLowerCase().indexOf(filterBy.toLowerCase()) >= 0
       )
       .map((person) => {
-        return <ContactDetails name={person.name} number={person.number} key={person.id} />;
+        return (
+          <ContactDetails
+            name={person.name}
+            number={person.number}
+            key={person.id}
+          />
+        );
       });
 
     setFiltered(filteredNames);
