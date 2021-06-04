@@ -7,6 +7,7 @@ const App = () => {
   const [query, setQuery] = useState("");
   const [filtered, setFiltered] = useState([]);
   const [limit, setLimit] = useState("Please begin your search.");
+  const [isClicked, setIsClicked] = useState(false)
 
   useEffect(() => {
     const getData = async () => {
@@ -28,6 +29,7 @@ const App = () => {
       )
 
     setFiltered(filteredCountries);
+    setIsClicked(false)
 
     if (e.target.value === "") {
       return setLimit("Please begin your search.");
@@ -48,7 +50,7 @@ const App = () => {
   return (
     <div>
       <Input filterCountries={filterCountries} query={query} />
-      <Filter limit={limit} filtered={filtered} />
+      <Filter limit={limit} filtered={filtered} isClicked={isClicked} setIsClicked={setIsClicked} />
     </div>
   );
 };
