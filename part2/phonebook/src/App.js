@@ -16,7 +16,6 @@ const App = () => {
 
   const addToPhonebook = async (contact) => {
     const person = persons.find((person) => person.name === contact.name);
-
     if (person) {
       if (window.confirm(`${contact.name} is already in the phonebook, replace old number with new one?`)) {
         await contactServices
@@ -51,23 +50,16 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const personObject = {
       name: newName,
       number: newNumber,
     };
-
     addToPhonebook(personObject);
   };
 
   const handleFilter = (e) => {
     setFilterBy(e.target.value);
-
-    const filteredNames = persons
-      .filter(
-        (person) =>
-          person.name.toLowerCase().indexOf(filterBy.toLowerCase()) >= 0
-      )
+    const filteredNames = persons.filter((person) => person.name.toLowerCase().indexOf(filterBy.toLowerCase()) >= 0)
       .map((person) => {
         return (
           <ContactDetails
@@ -78,7 +70,6 @@ const App = () => {
           />
         );
       });
-
     setFiltered(filteredNames);
   };
 
