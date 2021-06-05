@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
-const ContactDetails = ({ name, number }) => {
+const ContactDetails = ({ contact, deleteFromPhonebook, setFilterBy }) => {
+  const [deleted, setDeleted] = useState(false);
+
+  const deleteContact = () => {
+    deleteFromPhonebook(contact);
+    setDeleted(true);
+    setFilterBy("")
+  };
+
+  if (deleted) {
+    return <div>Contact successfully deleted!</div>;
+  }
+
   return (
-    <li key={name}>
-      {name} {number}
+    <li>
+      {contact.name} {contact.number}
+      <button onClick={deleteContact}>delete</button>
     </li>
   );
 };

@@ -1,24 +1,34 @@
 import axios from "axios";
 
-const postData = async () => {
-  const url = "http://localhost:3001/persons";
-  try {
-    const response = await axios.post(url, object);
-    setPersons(persons.concat(response.data));
-    setNewNumber("");
-    setNewName("");
-  } catch (err) {
-    console.error(err);
-  }
-};
+const BASE_URL = `http://localhost:3001/persons`
 
-const checkPhonebook = (object) => {
-  alert(`${object.name} is already in the phonebook`);
-  setNewNumber("");
-  return setNewName("");
-};
+const getContacts = async () => {
+  const request = await axios.get(BASE_URL)
+  const response = await request.data;
+  return response
+}
+
+const addContact = async (contact) => {
+  const request = await axios.post(BASE_URL, contact)
+  const response = await request.data;
+  return response
+}
+
+const updateContact = async (person, contact) => {
+  const request = await axios.put(`${BASE_URL}/${person.id}`, contact)
+  const response = await request.data;
+  return response;
+}
+
+const deleteContact = async (contact) => {
+  const request = await axios.delete(`${BASE_URL}/${contact.id}`)
+  const response = await request.data
+  return response
+}
 
 export default {
-  postData,
-  checkPhonebook,
+  getContacts,
+  addContact,
+  updateContact,
+  deleteContact
 };

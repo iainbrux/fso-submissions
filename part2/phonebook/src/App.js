@@ -3,7 +3,7 @@ import Heading from "./components/Heading";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import ContactDetails from "./components/ContactDetails";
-import axios from "axios";
+import contactServices from "./services/notes";
 
 const App = () => {
   const [newName, setNewName] = useState("");
@@ -12,37 +12,33 @@ const App = () => {
   const [filtered, setFiltered] = useState("");
   const [persons, setPersons] = useState("");
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("http://localhost:3001/persons");
-      const data = await response.json();
-      setPersons(data);
-    };
+  useEffect(() => contactServices.getContacts().then((data) => setPersons(data)), []);
 
-    getData();
-  }, []);
+  const addToPhonebook = async (contact) => {
+    const person = persons.find((person) => person.name === contact.name);
 
-  const addToPhonebook = (object) => {
-    const url = "http://localhost:3001/persons";
-
-    if (persons.find((person) => person.name === object.name)) {
-      alert(`${object.name} is already in the phonebook`);
-      setNewNumber("");
-      return setNewName("");
+    if (person) {
+      if (window.confirm(`${contact.name} is already in the phonebook, replace old number with new one?`)) {
+        await contactServices
+          .updateContact(person, contact)
+          .then(response => setPersons(persons.map(item => item.id !== person.id ? item : response))); //maps the current state with the newly updated data - see 2d.2 in FSO for refresher
+        setNewName("")
+        setNewNumber("")
+      } else {
+        alert('Cancelled change request.')
+      }
     } else {
-      const postData = async () => {
-        try {
-          const response = await axios.post(url, object);
-          setPersons(persons.concat(response.data));
-          setNewNumber("");
-          setNewName("");
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
-      return postData();
+      return contactServices.addContact(contact).then((response) => {
+        setNewNumber("");
+        setNewName("");
+        setPersons(persons.concat(response));
+      });
     }
+  };
+
+  const deleteFromPhonebook = async (contact) => {
+    await contactServices.deleteContact(contact);
+    contactServices.getContacts().then((data) => setPersons(data));
   };
 
   const handleName = (e) => {
@@ -75,9 +71,10 @@ const App = () => {
       .map((person) => {
         return (
           <ContactDetails
-            name={person.name}
-            number={person.number}
+            contact={person}
             key={person.id}
+            deleteFromPhonebook={deleteFromPhonebook}
+            setFilterBy={setFilterBy}
           />
         );
       });
