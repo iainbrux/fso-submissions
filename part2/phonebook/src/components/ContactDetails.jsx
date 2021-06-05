@@ -10,7 +10,7 @@ const ContactDetails = ({ contact, deleteFromPhonebook, setFilterBy }) => {
   };
 
   if (deleted) {
-    return <div>Contact successfully deleted!</div>;
+    return null;
   }
 
   return (

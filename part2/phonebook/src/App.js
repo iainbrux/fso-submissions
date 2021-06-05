@@ -4,6 +4,7 @@ import Form from "./components/Form";
 import Input from "./components/Input";
 import ContactDetails from "./components/ContactDetails";
 import contactServices from "./services/notes";
+import Notification from './components/Notification'
 
 const App = () => {
   const [newName, setNewName] = useState("");
@@ -11,11 +12,26 @@ const App = () => {
   const [filterBy, setFilterBy] = useState("");
   const [filtered, setFiltered] = useState("");
   const [persons, setPersons] = useState("");
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => contactServices.getContacts().then((data) => setPersons(data)), []);
 
+  const removeSuccessMessage = () => {
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+
+  const removeErrorMessage = () => {
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
   const addToPhonebook = async (contact) => {
     const person = persons.find((person) => person.name === contact.name);
+
     if (person) {
       if (window.confirm(`${contact.name} is already in the phonebook, replace old number with new one?`)) {
         await contactServices
@@ -23,6 +39,8 @@ const App = () => {
           .then(response => setPersons(persons.map(item => item.id !== person.id ? item : response))); //maps the current state with the newly updated data - see 2d.2 in FSO for refresher
         setNewName("")
         setNewNumber("")
+        setSuccessMessage(`${contact.name} successfully updated in phonebook`)
+        removeSuccessMessage()
       } else {
         alert('Cancelled change request.')
       }
@@ -31,13 +49,23 @@ const App = () => {
         setNewNumber("");
         setNewName("");
         setPersons(persons.concat(response));
+        setSuccessMessage(`${contact.name} successfully added to phonebook`)
+        removeSuccessMessage()
       });
     }
   };
 
   const deleteFromPhonebook = async (contact) => {
-    await contactServices.deleteContact(contact);
-    contactServices.getContacts().then((data) => setPersons(data));
+    await contactServices.deleteContact(contact)
+    .then(res => {
+      setSuccessMessage(`${contact.name} has been successfully deleted from the server`)
+      removeSuccessMessage();
+    })
+    .catch(error => {
+      setErrorMessage(`${contact.name} has already been deleted from the server`)
+      removeErrorMessage();
+    });
+    contactServices.getContacts().then((data) => setPersons(data))
   };
 
   const handleName = (e) => {
@@ -76,6 +104,7 @@ const App = () => {
   return (
     <div>
       <Heading text="Find a contact" />
+      <Notification successMessage={successMessage} errorMessage={errorMessage} />
       <Input text="name: " handleData={handleFilter} newData={filterBy} />
       <Heading text="Add a new contact" />
       <Form
