@@ -29,16 +29,24 @@ const App = () => {
     }, 5000)
   }
 
+  const clearForms = () => {
+    setNewName("")
+    setNewNumber("")
+    setFiltered("")
+    setFilterBy("")
+  }
+
   const addToPhonebook = async (contact) => {
     const person = persons.find((person) => person.name === contact.name);
+    const details = {...person, number: contact.number}
+    console.log(details)
 
     if (person) {
       if (window.confirm(`${contact.name} is already in the phonebook, replace old number with new one?`)) {
         await contactServices
-          .updateContact(person, contact)
-          .then(response => setPersons(persons.map(item => item.id !== person.id ? item : response))); //maps the current state with the newly updated data - see 2d.2 in FSO for refresher
-        setNewName("")
-        setNewNumber("")
+          .updateContact(person, details)
+          .then(response => setPersons(persons.map(item => item.id !== person.id ? item : response)))//maps the current state with the newly updated data - see 2d.2 in FSO for refresher
+        clearForms();
         setSuccessMessage(`${contact.name} successfully updated in phonebook`)
         removeSuccessMessage()
       } else {
@@ -46,8 +54,7 @@ const App = () => {
       }
     } else {
       return contactServices.addContact(contact).then((response) => {
-        setNewNumber("");
-        setNewName("");
+        clearForms();
         setPersons(persons.concat(response));
         setSuccessMessage(`${contact.name} successfully added to phonebook`)
         removeSuccessMessage()
